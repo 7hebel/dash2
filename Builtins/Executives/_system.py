@@ -1,6 +1,6 @@
 from datetime import datetime
 import random
-import os
+import sys
 
 import Modules.exceptions as Exceptions
 import Modules.display as Display
@@ -55,3 +55,26 @@ def check_update(args, session):
         Display.Message.success("You are up to date.")
     if current < online:
         Display.Message.warning(f"Update available: [{current.as_text}] -> [{online.as_text}]")
+
+def update_dash(args, session):
+    run_after = args['run_after']
+    if run_after is None:
+        run_after = True
+
+    current_version = session.version
+    online_version = Version.get_online_version()
+    if online_version.as_text == "0.0.0":
+        Display.Message.error("Cannot fetch online version.")
+        return
+
+    if current_version < online_version:
+        Display.Message.info(f"[{current_version.as_text}] -> [{online_version.as_text}]")
+
+        try:
+            import updater
+        except ImportError:
+            Display.Message.error("Updater not found.")
+            return
+        
+        updater.make_update(current_version.as_text, run_after)
+        sys.exit(0)
