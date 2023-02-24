@@ -20,9 +20,11 @@ class Version:
         return f"{self.major}.{self.minor}.{self.patch}"
 
     def __gt__(self, other_version: "Version") -> bool:
+        if self.as_tuple == other_version.as_tuple: return False
         return Version.__a_greater_than_b(self, other_version)
 
     def __lt__(self, other_version: "Version") -> bool:
+        if self.as_tuple == other_version.as_tuple: return False
         return not Version.__a_greater_than_b(self, other_version)
 
     def __eq__(self, other_version: "Version") -> bool:
@@ -31,8 +33,6 @@ class Version:
     @staticmethod
     def __a_greater_than_b(a: "Version", b: "Version") -> bool:
         """ Check if version a is greater than version b. """
-
-        if a == b: return False
 
         for a_value, b_value in zip([a.major, a.minor, a.patch], 
                                     [b.major, b.minor, b.patch]):
@@ -51,10 +51,11 @@ def get_version_from_text(text: str) -> "Version":
 
 def get_online_version() -> Version:
     """ Get newest available version. """
-    url = "https://raw.githubusercontent.com/gental-py/dash-remastered/main/version.ver"
+    url = "https://raw.githubusercontent.com/gental-py/dash2/main/.update"
     try:
-        version = get_version_from_text(requests.get(url, timeout=3).text)
-    except requests.exceptions.ConnectTimeout:
+        response = requests.get(url, timeout=3).json()["version"]
+        version = get_version_from_text(response)
+    except:
         version = Version(0,0,0)
 
     return version
