@@ -3,7 +3,7 @@ from Modules.data_types import DataType
 
 import Builtins.Executives._files as exe
 
-Command('find', exe.find_files, [Parameter('query', DataType.Text, 'Search query. Can contain "*" as all.'), Parameter('location', DataType.Text, 'Search location as path.', required=False)], 'Find files with given query.')
+Command('find', exe.find_files, [Parameter('query', DataType.Text, 'Search query. Can contain "*" as all.'), Parameter('location', DataType.Text, 'Search location as path. Use "?" to avoid search in all locations', required=False), Parameter('exact', DataType.Boolean, 'If set, dash will search exactly what query contains, otherwise, everything that contains given part.', required=False)], 'Find files with given query.')
 Command('deltmp', exe.delete_temp_files, [], 'Delete temporary files from all disks')
 Command('dsp', exe.show_file_content, [Parameter('file', DataType.Text, 'File path')], 'Display colored file content.', True)
 Command('bigf', exe.find_big_files, [Parameter('bottom_limit', DataType.Number, 'Minimum size of file to be treated as "big"', required=False)], "Show all files with greater size than limit.")

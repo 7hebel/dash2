@@ -3,8 +3,8 @@ Module: commands.py
 Classes and functions to manage user input and match it with commands.
 """
 from dataclasses import dataclass
+from typing import Iterable, Any
 from types import FunctionType
-from typing import Iterable
 import re
 
 import Modules.exceptions as Exceptions
@@ -54,7 +54,7 @@ class Parameter:
     max_lenght: int = 0
     min_lenght: int = 0
     required: bool = True
-
+    default: Any = None
 
 @dataclass
 class EndlessParameter(Parameter):
@@ -134,8 +134,10 @@ class Command:
 
             return given
 
+
         ready_args = {}
 
+        # Check parameters amount correctness.
         if self.has_endless_param():
             if len(args) < len(self.params) - self.not_required_count():
                 raise Exceptions.AmountError
@@ -155,37 +157,42 @@ class Command:
             for _ in range(len(self.params)-len(args)):
                 args.append(None)
 
-        for expected, given in zip(self.params, args):
-            if isinstance(expected, EndlessParameter):
-                endless_list = args[args.index(given):]
+        # Check every parameter and compare it to excpected data type.
+        for expected_param, given_param_value in zip(self.params, args):
+            expected_param: Parameter | EndlessParameter
+
+            if isinstance(expected_param, EndlessParameter):
+                endless_list = args[args.index(given_param_value):]
                 ready_list = []
 
                 if endless_list[0] is None:
                     ready_args.update({
-                        expected.name: None
+                        expected_param.name: None
                     })
 
                 else:
                     for endless_param in endless_list:
-                        endless_param = check_and_convert_parameter(expected, endless_param)
+                        endless_param = check_and_convert_parameter(expected_param, endless_param)
                         ready_list.append(endless_param)
 
                     ready_args.update({
-                        expected.name: ready_list
+                        expected_param.name: ready_list
                     })
 
-            elif not expected.required:
-                if not given is None:
-                    given = check_and_convert_parameter(expected, given)
+            elif not expected_param.required:
+                if not given_param_value is None:
+                    given_param_value = check_and_convert_parameter(expected_param, given_param_value)
+                else:
+                    given_param_value = expected_param.default
 
                 ready_args.update({
-                    expected.name: given
+                    expected_param.name: given_param_value
                 })
 
             else:
-                given = check_and_convert_parameter(expected, given)
+                given_param_value = check_and_convert_parameter(expected_param, given_param_value)
                 ready_args.update({
-                    expected.name: given
+                    expected_param.name: given_param_value
                 })
             
         return ready_args

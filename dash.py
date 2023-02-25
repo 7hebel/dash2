@@ -1,4 +1,4 @@
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 import os
 
@@ -12,17 +12,26 @@ import Modules.version as Version
 import Modules.session as Session
 import Modules.config as Config
 import Builtins.ALL
+import updater
 
 Registry.check_keys()
 Display.init_colors()
 Display.cls()
 
+# Main session.
+session = Session.Session()
+
 # Version control.
 version = Version.get_version_from_text(__version__)
 online_version = Version.get_online_version()
+session.version = version
 
 if online_version > version:
     Display.Message.warning(f"Newer version detected: [{version.as_text} -> {online_version.as_text}]")
+
+    if session.auto_update:
+        Display.Message.info("autoupdate is enabled, updating...")
+        updater.make_update()
 
 if online_version.as_tuple == (0, 0, 0):
     Display.Message.error(f"Failed to detect online version.")
@@ -30,10 +39,10 @@ if online_version.as_tuple == (0, 0, 0):
 # Sytem variables.
 Variables.Variable("ver", DataTypes.DataType.Text, version, True)
 
-# Main session.
-session = Session.Session()
-session.version = version
-
+# Auto load Varsdump.
+if session.varsdump != False:
+    Variables.load_from_file(session.varsdump)
+    
 
 while 1:
     session.refresh_config()

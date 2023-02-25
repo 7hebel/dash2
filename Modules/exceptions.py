@@ -12,6 +12,8 @@ def handle_error(exception: Exception):
     except AttributeError:
         Message.unexpected_error(str(exception))
 
+class InvalidValue(Exception):
+    def __str__(self) -> str: return "Invalid value."
 class NotFound(Exception):
     def __str__(self) -> str: return "Not found."
 class AmountError(Exception):
@@ -36,6 +38,8 @@ class OsError(Exception):
     def __str__(self) -> str: return "Something went wrong with system."
 class NotDirectory(Exception):
     def __str__(self) -> str: return "This is not a directory."
+class NotFile(Exception):
+    def __str__(self) -> str: return "This is not a file."
 class NotExists(Exception): 
     def __str__(self) -> str: return "This object does not exists."
 
@@ -43,3 +47,4 @@ class CannotGatherInfo(Exception):
     def __str__(self) -> str: return "Cannot gather information."
 class InvalidAddress(Exception): 
     def __str__(self) -> str: return "Invalid address."
+

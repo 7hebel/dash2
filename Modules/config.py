@@ -9,7 +9,9 @@ import Modules.display as Display
 __defaults__ = {
     "prompt": "#gray[#white%cwd#gray] #blue#bold~ #reset",
     "osprefix": ".",
-    "defaultdir": "."
+    "defaultdir": ".",
+    "autoupdate": "0",
+    "varsdump": "" 
 }
 
 def get_config() -> dict:
@@ -18,7 +20,7 @@ def get_config() -> dict:
     for key in __defaults__:
         value = Registry.get_value(key) 
 
-        if not value:
+        if value == False:
             Display.Message.error(f"Cannot get value of key: \"{key}\"")
             value = __defaults__[key]
 

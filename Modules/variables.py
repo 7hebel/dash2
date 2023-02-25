@@ -33,7 +33,7 @@ class Variable:
             return
         self.value = value
         try:
-            self.convert_self_value()
+            self.convert_value_to_datatype()
         except:
             Display.Message.error(f'Cannot parse variable: "{name}" (invalid value for data type)')
             del self
@@ -49,7 +49,7 @@ class Variable:
         else:
             Variable.system_connections.update({self.name: self})
 
-    def convert_self_value(self):
+    def convert_value_to_datatype(self):
         self.value = self.data_type(self.value)
 
 
@@ -105,13 +105,13 @@ def load_from_file(file_path: str):
         Variable(name, data_type, value)
         success += 1 
 
-    if success > 1 and failed == 0:
+    if success >= 1 and failed == 0:
         Display.Message.success(f'All {success} variables from: "{file_path}" loaded successfully.')
         
-    if success > 1 and failed > 1:
+    if success >= 1 and failed >= 1:
         Display.Message.warning(f'Loaded {success} variables, {failed} failed.')
 
-    if success == 0 and failed > 1:
+    if success == 0 and failed >= 1:
         Display.Message.error(f'No variables loaded, {failed} failed.')
 
 def dump_to_file(file_path: str):

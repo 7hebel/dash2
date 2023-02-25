@@ -1,8 +1,11 @@
+from datetime import datetime
 import requests
 import socket
 import getmac
+import os
 
 import Modules.exceptions as Exceptions 
+import Modules.display as Display
 
 def net_info(args):
     """ Show network information. (PCname, Public and Private IP, MAC)"""
@@ -56,3 +59,58 @@ def ip_geo_info(args):
 
     print(f"Country: {response['country']} [{response['countryCode']}]")
     print(f"City: {response['city']} [{response['zip']}]")
+
+def make_request(args):
+    url = args['url']
+    request_type = args['type'].lower()
+    to_file = args['to_file']
+
+    request_types = {
+        "get": requests.get,
+        "post": requests.post,
+        "patch": requests.patch,
+        "put": requests.put,
+        "head": requests.head,
+        "delete": requests.delete,
+    }
+
+    if request_type not in request_types:
+        raise Exceptions.InvalidValue
+
+    request = request_types[request_type]
+
+    try:
+        response = request(url, timeout=10)
+    except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError):
+        raise Exceptions.CannotConnect
+    except requests.exceptions.MissingSchema:
+        raise Exceptions.InvalidAddress
+    except:
+        raise Exceptions.CannotGatherInfo
+    
+    if response.status_code in range(200, 300):
+        Display.Message.success(f"Status code: {response.status_code}")
+    elif response.status_code in range(300, 400):
+        Display.Message.warning(f"Status code: {response.status_code}")
+    elif response.status_code in range(400, 600):
+        Display.Message.error(f"Status code: {response.status_code}")
+    else:
+        Display.Message.info(f"Status code: {response.status_code}")
+    
+    content = response.text
+    
+    if to_file:
+        current_time = datetime.now().strftime("%H_%M_%S")
+        file_path = f".\\response {current_time}.txt"
+        try:
+            with open(file_path, "a+") as file:
+                file.write(content)
+            Display.Message.success(f"Response has been saved to: {os.path.abspath(file_path)}")
+
+        except:
+            print(f"Response:\n{content}")
+            Display.Message.error(f"Response could not be saved to file: {os.path.abspath(file_path)}")
+
+    else:
+        print(f"Response:\n{content}")
+    

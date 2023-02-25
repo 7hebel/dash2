@@ -2,7 +2,6 @@ from datetime import datetime
 import random
 import sys
 
-import Modules.exceptions as Exceptions
 import Modules.display as Display
 import Modules.version as Version
 

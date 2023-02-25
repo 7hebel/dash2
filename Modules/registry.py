@@ -53,10 +53,16 @@ def create(key_name: str, value: str) -> None:
     reg_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, Keys.REGISTRY_PATH, 0, winreg.KEY_SET_VALUE)
 
     with reg_key:
-        if '%' in value:
+        if isinstance(value, bool):
+            var_type = winreg.REG_SZ
+            if value: value="1"
+            else: value="0"
+
+        elif '%' in value:
             var_type = winreg.REG_EXPAND_SZ
         else:
             var_type = winreg.REG_SZ
+            
         winreg.SetValueEx(reg_key, key_name, 0, var_type, value)
 
 def delete(key_name: str) -> None:
