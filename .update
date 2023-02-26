@@ -13,7 +13,7 @@
             },
             "Modules": {
                 "d": {},
-                "f": ["__init__.py", "commands.py", "config.py", "data_types.py", "display.py", "exceptions.py", "files.py", "registry.py", "session.py", "variables.py", "version.py"]
+                "f": ["__init__.py", "commands.py", "config.py", "data_types.py", "display.py", "exceptions.py", "files.py", "session.py", "variables.py", "version.py"]
             } 
         },
         "f": ["__init__.py", "dash.py"]
