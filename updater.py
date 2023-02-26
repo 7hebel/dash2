@@ -4,7 +4,7 @@ import shutil
 import sys
 import os
 
-RAW_URL_BASE = r"https://raw.githubusercontent.com/gental-py/dash2/main/"
+RAW_URL_BASE = r"https://raw.githubusercontent.com/gental-py/dash2/Linux/"
 DASH_PATH = r"."
 OLD_DASH_PATH = "old/"
 
