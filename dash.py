@@ -1,11 +1,10 @@
-__version__ = "1.1.0"
+__version__ = "0.1.0"
 
 import os
 
 import Modules.exceptions as Exceptions
 import Modules.data_types as DataTypes
 import Modules.variables as Variables
-import Modules.registry as Registry
 import Modules.commands as Commands 
 import Modules.display as Display
 import Modules.version as Version
@@ -14,7 +13,7 @@ import Modules.config as Config
 import Builtins.ALL
 import updater
 
-Registry.check_keys()
+Config.check_files()
 Display.init_colors()
 Display.cls()
 

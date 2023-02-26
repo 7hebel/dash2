@@ -2,14 +2,7 @@ import re
 import os
 
 def get_all_disks():
-    all_disks = [
-        full_disk_name for full_disk_name in
-        re.findall(
-            r"[A-Z]+:.*$", os.popen("mountvol /").read(),
-            re.MULTILINE
-        )
-    ]
-    return all_disks
+    return "/"
 
 def list_dir(path):
     dirs, files = [], []

@@ -5,8 +5,8 @@ import sys
 import os
 
 RAW_URL_BASE = r"https://raw.githubusercontent.com/gental-py/dash2/main/"
-DASH_PATH = r".\\"
-OLD_DASH_PATH = DASH_PATH + "old\\"
+DASH_PATH = r"."
+OLD_DASH_PATH = "old/"
 
 
 def get_update_structure():
@@ -33,7 +33,7 @@ def download_new_version():
     structure = get_update_structure()[""]
 
     def _handle_part(dir_name: str,structure: dict, path=DASH_PATH, web_path=""):
-        dir_path = path + dir_name + "\\"
+        dir_path = path + dir_name + "/"
         web_path += dir_name + "/"
 
         if dir_name != "" and not os.path.exists(dir_path):
@@ -66,7 +66,7 @@ def make_update(old_version: str, open_after_update=True):
 
     # Create subdir for current version of dash.
     current_time = datetime.now().strftime("%H_%M_%S")
-    subdir_name = f"{old_version} {current_time}\\"
+    subdir_name = f"{old_version} {current_time}/"
     subdir_path = OLD_DASH_PATH + subdir_name
     if not os.path.exists(subdir_path):
         os.mkdir(subdir_path)

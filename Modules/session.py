@@ -1,7 +1,6 @@
 import pathlib
 import os
 
-import Modules.registry as Registry
 import Modules.display as Display
 import Modules.config as Config
 
@@ -24,7 +23,7 @@ class Session:
 
         if not os.path.exists(cwd):
             Display.Message.warning(f"Default directory not found: {cwd}")
-            Registry.set_value("defaultdir", Config.__defaults__["defaultdir"])
+            Config.set_value("defaultdir", Config.__defaults__["defaultdir"])
             cwd = os.getcwd()
 
         cwd = pathlib.Path(cwd).absolute().resolve()
@@ -37,7 +36,7 @@ class Session:
         if self.varsdump != False:
             if not os.path.exists(self.varsdump):
                 Display.Message.warning("Invalid path for key: <varsdump>")
-                Registry.set_value("varsdump", Config.__defaults__["varsdump"])
+                Config.set_value("varsdump", Config.__defaults__["varsdump"])
                 self.varsdump = False
 
         # Convert auto update to boolean value.
@@ -46,7 +45,7 @@ class Session:
         elif autoupdate == "0": self.auto_update = False
         else:
             Display.Message.warning("Invalid value for key: <autoupdate>")
-            Registry.set_value("autoupdate", Config.__defaults__["autoupdate"])
+            Config.set_value("autoupdate", Config.__defaults__["autoupdate"])
             self.auto_update = False
 
     def refresh_config(self):
@@ -56,6 +55,7 @@ class Session:
         autoupdate = _config['autoupdate']
         varsdump = _config['varsdump']
 
+        self._config = _config
         self.raw_prompt = raw_prompt
         self.osprefix = osprefix
         self.auto_update = autoupdate
