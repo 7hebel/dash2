@@ -215,9 +215,9 @@ class Command:
         
         for param in self.params:
             if param.required:
-                syntax += f"<{param.name}:{str(param.data_type.name)}{':(endless)' if isinstance(param, EndlessParameter) else ''}> "
+                syntax += f"<{param.name}:{str(param.data_type.name)}{' (endless)' if isinstance(param, EndlessParameter) else ''}> "
             else:
-                syntax += f"[{param.name}:{str(param.data_type.name)}{':(endless)' if isinstance(param, EndlessParameter) else ''}] "
+                syntax += f"[{param.name}:{str(param.data_type.name)}=\"{param.default}\"{' (endless)' if isinstance(param, EndlessParameter) else ''}] "
 
         Display.Message.bullet_list("syntax", [syntax])
 
@@ -237,4 +237,3 @@ class Command:
             parameters_count = f"[{len(self.params) - self.not_required_count()}-{len(self.params)}{'+' if self.has_endless_param() else ''}]"
 
         return parameters_count
-        
